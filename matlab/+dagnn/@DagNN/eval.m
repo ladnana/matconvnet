@@ -77,22 +77,12 @@ if obj.computingDerivative && ~iscell(derOutputs), error('DEROUTPUTS is not a ce
 % -------------------------------------------------------------------------
 
 % set the input values
-if strcmp(obj.mode,'test')
-    v = obj.getVarIndex(inputs(1:2:end - 2)) ;
-    name = inputs(end - 1);
-    expdir = inputs(end);
-else
-    v = obj.getVarIndex(inputs(1:2:end)) ;
-end
+v = obj.getVarIndex(inputs(1:2:end)) ;
 if any(isnan(v))
   broken = find(isnan(v)) ;
   error('No variable of name ''%s'' could be found in the DAG.', inputs{2*broken(1)-1}) ;
 end
-if strcmp(obj.mode,'test')
-    [obj.vars(v).value] = deal(inputs{2:2:end - 2}) ;
-else
-    [obj.vars(v).value] = deal(inputs{2:2:end}) ;
-end
+[obj.vars(v).value] = deal(inputs{2:2:end}) ;
 inputs = [] ;
 
 obj.numPendingVarRefs = [obj.vars.fanout] ;
@@ -100,20 +90,6 @@ for l = obj.executionOrder
   time = tic ;
   obj.layers(l).block.forwardAdvanced(obj.layers(l)) ;
   obj.layers(l).forwardTime = toc(time) ;
-  if strcmp(obj.mode,'test')
-      if(strcmp(obj.layers(l).name,'pool1') || strcmp(obj.layers(l).name,'pool2') || strcmp(obj.layers(l).name,'pool3') ...
-          || strcmp(obj.layers(l).name,'pool4') || strcmp(obj.layers(l).name,'pool5') || strcmp(obj.layers(l).name,'dropout1') ...
-          || strcmp(obj.layers(l).name,'dropout2') || strcmp(obj.layers(l).name,'fc8') || strcmp(obj.layers(l).name,'sum1')...
-          || strcmp(obj.layers(l).name,'sum2') || strcmp(obj.layers(l).name,'sum3') || strcmp(obj.layers(l).name,'deconv4'))
-          index = obj.getVarIndex(obj.layers(l).outputs);
-          temp = gather(obj.vars(index).value);
-          if ~exist(fullfile(expdir{1}, name{1})) 
-            mkdir(fullfile(expdir{1}, name{1}));
-          end
-          save(fullfile(expdir{1},name{1},[obj.layers(l).name '.mat']),'temp');
-    %       save(fullfile(cropimagesPath,[imdb.images.name{i} '.mat']),'picture');
-      end
-  end
 end
 
 % -------------------------------------------------------------------------
