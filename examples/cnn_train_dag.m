@@ -424,10 +424,10 @@ net = net_.saveobj() ;
 save(fileName, 'net', 'state') ;
 idx1 = strfind(fileName,'-');
 idx2 = strfind(fileName,'.');
-num = str2num(fileName(idx1(2)+1:idx2-1));
+num = str2num(fileName(idx1(end)+1:idx2-1));
 pidx = strfind(fileName,'\');
 path = fileName(1:pidx(end));
-if(num == 102 || num == 202 || num == 302 || num == 402 || num == 500)
+if num == 102 || num == 202 || num == 302 || num == 402 || num == 500
     fileDIR=dir(strcat(path,'*.mat'));
     filenum=length(fileDIR);
     if filenum > 0
@@ -436,13 +436,12 @@ if(num == 102 || num == 202 || num == 302 || num == 402 || num == 500)
             if(~isempty(dn)) 
                 didx1 = strfind(fileDIR(i).name,'-');
                 didx2 = strfind(fileDIR(i).name,'.');
-                dnum = str2num(fileDIR(i).name(didx1(2)+1:didx2-1));
+                dnum = str2num(fileDIR(i).name(didx1(end)+1:didx2-1));
                 if dnum ~= 1 && dnum ~= 100  && dnum ~= 200 && dnum ~= 300 && dnum ~= 400 && dnum ~= 500 && dnum ~= num - 1 && dnum ~= num
-                    delete(fullfile(path,strcat(strcat(fileName(pidx(end)+1:idx1(2)),num2str(dnum)),'.mat')));
+                    delete(fullfile(path,strcat(strcat(fileName(pidx(end)+1:idx1(end)),num2str(dnum)),'.mat')));
                 end
                 if dnum == 500
-                    delete(fullfile(path,strcat(strcat(fileName(pidx(end)+1:idx1(2)),'498'),'.mat')));
-                    delete(fullfile(path,strcat(strcat(fileName(pidx(end)+1:idx1(2)),'499'),'.mat')));
+                    delete(fullfile(path,strcat(strcat(fileName(pidx(end)+1:idx1(end)),'499'),'.mat')));
                 end
             end
         end
