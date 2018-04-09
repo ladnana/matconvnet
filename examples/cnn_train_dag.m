@@ -23,7 +23,7 @@ opts.numEpochs = 300 ;
 opts.learningRate = 0.001 ;
 opts.weightDecay = 0.0005 ;
 
-opts.solver = @solver.rmsprop ;  % Empty array means use the default SGD solver
+opts.solver = @solver.adam ;  % Empty array means use the default SGD solver
 [opts, varargin] = vl_argparse(opts, varargin) ;
 if ~isempty(opts.solver)
   assert(isa(opts.solver, 'function_handle') && nargout(opts.solver) == 2,...
